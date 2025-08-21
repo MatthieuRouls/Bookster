@@ -5,6 +5,7 @@ import Modele.Actions.Emprunt;
 import Modele.Articles.Livre;
 import Modele.GenerateurIdentifiant.Generateurs.IDGenerateur;
 import Modele.GenerateurIdentifiant.Generateurs.ISBNGenerator;
+import Modele.Securite.SecurisationEntrees;
 import Modele.Utilisateurs.Abonne;
 
 import java.util.List;
@@ -81,15 +82,45 @@ public class InterfaceBibliotheque {
     private void enregistrerNouvelAbonne() {
         System.out.println("\n=== NOUVEL ABONNE ===");
 
-        System.out.println("Nom : ");
-        String nom = sc.nextLine();
+        String nom;
+        while (true) {
+            System.out.println("Nom : ");
+            nom = sc.nextLine();
+            try {
+                SecurisationEntrees.validerStringFormat(nom, "Nom",
+                                                        "^[a-zA-ZÀ-ÖØ-öø-ÿ']+(?:[-\\s][a-zA-ZÀ-ÖØ-öø-ÿ']+)*$",
+                                                        "ou des caracteres valides");
+                break;
+            }  catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
-        System.out.println("Prenom : ");
-        String prenom = sc.nextLine();
+        String prenom;
+        while (true) {
+            System.out.println("Prenom : ");
+            prenom = sc.nextLine();
+            try {
+                SecurisationEntrees.validerStringFormat(prenom, "Prenom",
+                                                        "^[a-zA-ZÀ-ÖØ-öø-ÿ']+(?:[-\\s][a-zA-ZÀ-ÖØ-öø-ÿ']+)*$",
+                                                        "ou des caracteres valides");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
-        System.out.println("Email : ");
-        String email = sc.nextLine();
-
+        String email;
+        while (true) {
+            System.out.println("Email : ");
+            email = sc.nextLine();
+            try {
+                SecurisationEntrees.validerEmail(email);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
         String id;
         IDGenerateur generateurID = new IDGenerateur();
         id = generateurID.genererIdentifiant();
@@ -106,16 +137,44 @@ public class InterfaceBibliotheque {
     private void enregistrerNouveauLivre() {
         System.out.println("\n=== NOUVEAU LIVRE ===");
 
+        String titre;
+        while (true) {
         System.out.print("Titre : ");
-        String titre = sc.nextLine();
+        titre = sc.nextLine();
+            try {
+                SecurisationEntrees.validerStringFormat(titre, "Titre", "^[a-zA-Z0-9\\s\\-\\.,:;!?'\\(\\)]+$",
+                                                                "contient des caractères interdits.");
+                    break;
+                } catch (IllegalArgumentException e) {
+                System.out.println("Erreur : " + e.getMessage());
+            }
+        }
 
+        String auteur;
+        while (true) {
         System.out.print("Auteur : ");
-        String auteur = sc.nextLine();
+        auteur = sc.nextLine();
+            try {
+                SecurisationEntrees.validerStringFormat(auteur, "Auteur",
+                                                                "^[a-zA-ZÀ-ÖØ-öø-ÿ']+(?:[-\\s][a-zA-ZÀ-ÖØ-öø-ÿ']+)*$",
+                                                                "contient des caracteres interdits");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Erreur : " + e.getMessage());
+            }
+        }
 
-        System.out.print("Quantité : ");
-        int quantite = sc.nextInt();
-        sc.nextLine();
-
+        int quantite;
+        while (true) {
+            System.out.print("Quantité : ");
+            quantite = sc.nextInt();
+                try {
+                    SecurisationEntrees.validerEntierpositif(quantite, "quantite");
+                    break;
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Erreur : " + e.getMessage());
+                }
+        }
         System.out.print("Quantite disponible : ");
         int quantiteDisponible = quantite;
         System.out.println(quantiteDisponible);
@@ -136,11 +195,28 @@ public class InterfaceBibliotheque {
     private void enregistrerNouveauPret() {
         System.out.println("\n=== NOUVEAU PRÊT ===");
 
+        String isbn;
+        while (true) {
         System.out.print("ISBN du livre : ");
-        String isbn = sc.nextLine();
-
-        System.out.print("Email de l'abonné : ");
-        String email = sc.nextLine();
+        isbn = sc.nextLine();
+            try {
+                SecurisationEntrees.validerISBN(isbn);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Erreur : " + e.getMessage());
+            }
+        }
+        String email;
+        while (true) {
+            System.out.print("Email de l'abonné : ");
+            email = sc.nextLine();
+            try {
+                SecurisationEntrees.validerEmail(email);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Erreur : " + e.getMessage());
+            }
+        }
 
         try {
             Emprunt emprunt = bibliotheque.emprunterLivre(isbn, email);
@@ -203,12 +279,29 @@ public class InterfaceBibliotheque {
 
         afficherListePrets();
 
-        System.out.print("ID de l'abonné qui rend le livre : ");
-        String id = sc.nextLine();
+        String id;
+        while (true) {
+            System.out.print("ID de l'abonné qui rend le livre : ");
+            id = sc.nextLine();
+            try {
+                SecurisationEntrees.validerID(id);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Erreur : " + e.getMessage());
+            }
+        }
 
-        System.out.print("ISBN du livre à rendre : ");
-        String isbn = sc.nextLine();
-
+        String isbn;
+        while (true) {
+            System.out.print("ISBN du livre à rendre : ");
+            isbn = sc.nextLine();
+            try {
+                SecurisationEntrees.validerISBN(isbn);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Erreur : " + e.getMessage());
+            }
+        }
         try {
             bibliotheque.retournerLivre(isbn, id);
             System.out.println("Livre retourné avec succès !");

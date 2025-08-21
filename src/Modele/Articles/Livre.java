@@ -77,8 +77,16 @@ public class Livre {
         this.quantiteDisponible++;
     }
 
-    public void modifierQuantite(int nouvelleQuantite) {
-        this.quantite = nouvelleQuantite;
+    public void ajouterExemplaire(int nombreExemplaire) {
+        if (nombreExemplaire <= 0) {
+            throw new IllegalArgumentException("Le nombre d'exemplaire a ajouter doit etre positif");
+        }
+
+        this.quantite += nombreExemplaire;
+
+        System.out.println(nombreExemplaire + " exemplaire(s) ajoute(s) avec succes !");
+        System.out.println("Nouvelle quantite totale : " + this.quantite);
+        System.out.println("Nouvelle quantite disponible : " + this.quantiteDisponible);
     }
 }
 

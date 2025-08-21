@@ -8,7 +8,7 @@ public class SecurisationEntrees {
 
     public static void validerStringFormat(String valeur, String champ, String regex, String messageErreur) {
         if (valeur == null || !valeur.matches(regex)) {
-            throw new IllegalArgumentException(champ + " doit contenir une saisie" + messageErreur);
+            throw new IllegalArgumentException(champ + " doit contenir une saisie ou " + messageErreur);
         }
     }
 

@@ -44,6 +44,10 @@ public class Bibliothecaire {
         }
     }
 
+    public void modifierQuantite(int nouvelleQuantite) {
+        Livre
+    }
+
     public void enregistrerNouveauLivre(Livre livre, Bibliotheque bibliotheque) {
         bibliotheque.ajouterLivre(livre);
     }
