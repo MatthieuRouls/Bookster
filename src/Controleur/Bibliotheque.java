@@ -38,6 +38,10 @@ public class Bibliotheque {
         return emprunts;
     }
 
+    public List<Bibliothecaire> getBibliothecaires() {
+        return bibliothecaires;
+    }
+
     public Emprunt emprunterLivre(String idLivre, String emailAbonne) {
         Livre livre = rechercherLivreParID(idLivre);
         Abonne abonne = rechercherAbonneParEmail(emailAbonne);
@@ -110,9 +114,10 @@ public class Bibliotheque {
             this.emprunts.add(emprunt);
         }
     }
-    public void ajouterBibliothecaire(Bibliothecaire biblio) {
+    public void ajouterBibliothecaire(Bibliothecaire bibliothecaire) {
         if (this.bibliothecaires != null) {
-            this.bibliothecaires.add(biblio);
+            this.bibliothecaires = new ArrayList<>();
         }
+        this.bibliothecaires.add(bibliothecaire);
     }
 }

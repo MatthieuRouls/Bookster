@@ -3,9 +3,11 @@ package Modele.Utilisateurs;
 import Controleur.Bibliotheque;
 import Modele.Actions.Emprunt;
 import Modele.Articles.Livre;
+import java.util.List;
+import java.util.Scanner;
 
 public class Bibliothecaire {
-
+    Scanner sc = new Scanner(System.in);
     private String nom;
     private String identifiant;
 
@@ -44,14 +46,26 @@ public class Bibliothecaire {
         }
     }
 
-    public void modifierQuantite(int nouvelleQuantite) {
-        Livre
-    }
 
-    public void enregistrerNouveauLivre(Livre livre, Bibliotheque bibliotheque) {
-        bibliotheque.ajouterLivre(livre);
-    }
-    public void enregistrerNouvelAbonne(Abonne abonne, Bibliotheque bibliotheque) {
-        bibliotheque.ajouterAbonne(abonne);
+    public void ajouterExemplaireLivreInteractif(Bibliotheque bibliotheque) {
+        System.out.println("ID du livre");
+        String id = sc.nextLine();
+
+        Livre livres = bibliotheque.rechercherLivreParID(id);
+
+        if (livres != null) {
+            System.out.println("Nombre d'exemplaires a ajouter : ");
+            int nombreExemplaires = sc.nextInt();
+            sc.nextLine();
+
+            try {
+                livres.ajouterExemplaire(nombreExemplaires);
+                System.out.println("Exemplaire ajoute avec succes par " + getNom());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Erreur : " + e.getMessage());
+            }
+        } else {
+            System.out.println("Aucun livre trouve avec cet identifiant.");
+        }
     }
 }

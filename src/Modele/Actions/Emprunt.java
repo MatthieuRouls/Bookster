@@ -76,6 +76,5 @@ public class Emprunt {
             e.printStackTrace();
             return false;
         }
-
     }
 }

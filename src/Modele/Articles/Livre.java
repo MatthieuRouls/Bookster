@@ -46,6 +46,10 @@ public class Livre {
         return auteur;
     }
 
+    public int getQuantite() {
+        return quantite;
+    }
+
     public int getQuantiteDisponible() {
         if(quantiteDisponible > quantite) {
             throw new IllegalStateException("La quantite disponible ne peut pas etre superieure a la quantite initiale.");
@@ -83,6 +87,7 @@ public class Livre {
         }
 
         this.quantite += nombreExemplaire;
+        this.quantiteDisponible += nombreExemplaire;
 
         System.out.println(nombreExemplaire + " exemplaire(s) ajoute(s) avec succes !");
         System.out.println("Nouvelle quantite totale : " + this.quantite);

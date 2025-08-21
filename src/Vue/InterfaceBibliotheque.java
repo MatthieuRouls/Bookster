@@ -7,7 +7,9 @@ import Modele.GenerateurIdentifiant.Generateurs.IDGenerateur;
 import Modele.GenerateurIdentifiant.Generateurs.ISBNGenerator;
 import Modele.Securite.SecurisationEntrees;
 import Modele.Utilisateurs.Abonne;
+import Modele.Utilisateurs.Bibliothecaire;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -15,9 +17,19 @@ import java.util.stream.Collectors;
 public class InterfaceBibliotheque {
     private Scanner sc;
     protected Bibliotheque bibliotheque;
+    private Bibliothecaire bibliothecaire;
+
     public InterfaceBibliotheque(Bibliotheque bibliotheque) {
         this.sc = new Scanner(System.in);
         this.bibliotheque = bibliotheque;
+
+        List<Bibliothecaire> bibliothecaires = bibliotheque.getBibliothecaires();
+        if (bibliothecaires != null && !bibliothecaires.isEmpty()) {
+            this.bibliothecaire = bibliothecaires.get(0);
+        } else {
+            System.out.println("Erreur: Aucun bibliothecaire disponible dans cette bibliotheque !");
+        }
+
     }
 
     public void demarrerApplication() {
@@ -41,11 +53,12 @@ public class InterfaceBibliotheque {
         System.out.println("\n=== MENU PRINCIPAL ===");
         System.out.println("1. Enregistrer un nouvel abonné");
         System.out.println("2. Enregistrer un nouveau livre");
-        System.out.println("3. Enregistrer un nouveau prêt");
-        System.out.println("4. Afficher la liste des abonnés");
-        System.out.println("5. Afficher la liste des livres");
-        System.out.println("6. Afficher la liste des prêts");
-        System.out.println("7. Gérer un retour");
+        System.out.println("3. Enregistrer un nouvel exemplaire d'une reference");
+        System.out.println("4. Enregistrer un nouveau prêt");
+        System.out.println("5. Afficher la liste des abonnés");
+        System.out.println("6. Afficher la liste des livres");
+        System.out.println("7. Afficher la liste des prêts");
+        System.out.println("8. Gérer un retour");
         System.out.println("0. Quitter");
         System.out.print("Votre choix : ");
     }
@@ -66,11 +79,12 @@ public class InterfaceBibliotheque {
         switch (choix) {
             case 1: enregistrerNouvelAbonne(); break;
             case 2: enregistrerNouveauLivre(); break;
-            case 3: enregistrerNouveauPret(); break;
-            case 4: afficherListeAbonnes(); break;
-            case 5: afficherListeLivres(); break;
-            case 6: afficherListePrets(); break;
-            case 7: gererRetour(); break;
+            case 3: bibliothecaire.ajouterExemplaireLivreInteractif(bibliotheque); break;
+            case 4: enregistrerNouveauPret(); break;
+            case 5: afficherListeAbonnes(); break;
+            case 6: afficherListeLivres(); break;
+            case 7: afficherListePrets(); break;
+            case 8: gererRetour(); break;
             case 0: return false;
             default:
                 System.out.println(" Choix invalide !");
@@ -84,7 +98,7 @@ public class InterfaceBibliotheque {
 
         String nom;
         while (true) {
-            System.out.println("Nom : ");
+            System.out.print("Nom : ");
             nom = sc.nextLine();
             try {
                 SecurisationEntrees.validerStringFormat(nom, "Nom",
@@ -98,7 +112,7 @@ public class InterfaceBibliotheque {
 
         String prenom;
         while (true) {
-            System.out.println("Prenom : ");
+            System.out.print("Prenom : ");
             prenom = sc.nextLine();
             try {
                 SecurisationEntrees.validerStringFormat(prenom, "Prenom",
@@ -112,7 +126,7 @@ public class InterfaceBibliotheque {
 
         String email;
         while (true) {
-            System.out.println("Email : ");
+            System.out.print("Email : ");
             email = sc.nextLine();
             try {
                 SecurisationEntrees.validerEmail(email);
