@@ -1,0 +1,76 @@
+@startuml Bibliotheque_System
+
+!theme toy
+
+class Abonne {
+    -nom: String
+    -prenom: String
+    -email: String
+    -dateInscription: Date
+    +emprunterLivre(livre: Livre): Emprunt
+    +rendreLivre(emprunt: Emprunt): void
+    +afficherHistorique(): List<Emprunt>
+}
+
+class Livre {
+    -titre: String
+    -auteur: String
+    -quantite: int
+    -identifiant: String
+    -disponible: boolean
+    +verifierDisponibilite(): boolean
+    +modifierQuantite(nouvelleQuantite: int): void
+}
+
+class Emprunt {
+    -dateDebut: Date
+    -dateFin: Date
+    -dateFinCalculee: Date
+    -livre: Livre
+    -abonne: Abonne
+    -rendu: boolean
+    +calculerDateFin(): Date
+    +marquerCommeRendu(): void
+    +estEnRetard(): boolean
+}
+
+class Bibliothecaire {
+    -nom: String
+    -identifiant: String
+    +enregistrerNouvelAbonne(abonne: Abonne): void
+    +enregistrerNouveauLivre(livre: Livre): void
+    +enregistrerNouvelPret(emprunt: Emprunt): void
+    +afficherListeAbonnes(): List<Abonne>
+    +afficherListeLivres(): List<Livre>
+    +afficherListePrets(): List<Emprunt>
+    +gererRetour(emprunt: Emprunt): void
+}
+
+class Bibliotheque {
+    -nom: String
+    -adresse: String
+    -livres: List<Livre>
+    -abonnes: List<Abonne>
+    -emprunts: List<Emprunt>
+    -bibliothecaires: List<Bibliothecaire>
+    +ajouterLivre(livre: Livre): void
+    +ajouterAbonne(abonne: Abonne): void
+    +rechercherLivre(critere: String): List<Livre>
+    +genererRapportActivite(): String
+}
+
+' Relations avec cardinalités
+Bibliotheque "1"--"0..*" Livre : "contient"
+Bibliotheque "1"--"0..*" Abonne : "gère"
+Bibliotheque "1"--"0..*" Emprunt : "enregistre"
+Bibliotheque "1"--"1..*" Bibliothecaire : "emploie"
+
+Abonne "1"--"0..*" Emprunt : "effectue"
+Livre "1"--"0..*" Emprunt : "fait l'objet de"
+
+Emprunt "0..*"--"1" Abonne : "concerne"
+Emprunt "0..*"--"1" Livre : "porte sur"
+
+Bibliothecaire "1"--"0..*" Emprunt : "gère"
+
+@enduml
