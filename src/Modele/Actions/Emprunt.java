@@ -19,7 +19,7 @@ public class Emprunt {
     private boolean rendu = false;
     private static final int DUREE_PRET = 7;
 
-    //ajouter Abonne abonne dans public Emprunt
+
     private Emprunt(Livre livre, Abonne abonne) {
         this.dateDebut = new Date();
         this.dateFin = calculerDateFin();

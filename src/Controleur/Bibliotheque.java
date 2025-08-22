@@ -7,6 +7,7 @@ import Modele.Articles.Livre;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Bibliotheque {
 
@@ -119,5 +120,43 @@ public class Bibliotheque {
             this.bibliothecaires = new ArrayList<>();
         }
         this.bibliothecaires.add(bibliothecaire);
+    }
+
+    public void supprimerAbonneBibli(Scanner scanner) {
+        System.out.print("Veuillez entrer l'ID de l'abonne a supprimer: ");
+        String idAbonne = scanner.next();
+
+        Abonne abonneASupprimer = null;
+        for (Abonne abonne : this.abonnes) {
+            if (abonne.getID().equals(idAbonne)){
+                abonneASupprimer=abonne;
+                break;
+            }
+        }
+        if (abonneASupprimer!=null) {
+            this.abonnes.remove(abonneASupprimer);
+            System.out.println("L'abonne " + abonneASupprimer.getNom() + (" ") + abonneASupprimer.getPrenom() + " a ete supprime avec succes !");
+        } else {
+            System.out.println("Aucun abonne trouve avec cet ID.");
+        }
+    }
+
+    public void supprimerReferenceBibli (Scanner scanner) {
+        System.out.print("Veuillez entrer l'ID de la reference a supprimer: ");
+        String idReference = scanner.next();
+
+        Livre livreASupprimer = null;
+        for (Livre livre : this.livres) {
+            if (livre.getID().equals(idReference)){
+                livreASupprimer=livre;
+                break;
+            }
+        }
+        if (livreASupprimer!=null) {
+            this.livres.remove(livreASupprimer);
+            System.out.println("La reference " + livreASupprimer.getTitre() + " de " + livreASupprimer.getAuteur() + " a bien ete supprimee.");
+        } else {
+            System.out.println("Aucun reference trouve avec cet ID.");
+        }
     }
 }

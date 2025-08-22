@@ -9,6 +9,7 @@ import Modele.Securite.SecurisationEntrees;
 import Modele.Utilisateurs.Abonne;
 import Modele.Utilisateurs.Bibliothecaire;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -34,64 +35,150 @@ public class InterfaceBibliotheque {
 
     public void demarrerApplication() {
         try {
-            System.out.println("BIBLI'GESTION");
+            System.out.println("BOOKSTER");
 
             boolean continuer = true;
             while (continuer) {
                 afficherMenuPrincipal();
-                int choix = lireChoixUtilisateur();
-                continuer = traiterChoix(choix);
+                continuer = false;
             }
         } finally {
             sc.close();
         }
-
         System.out.println("Au revoir !");
     }
 
     public void afficherMenuPrincipal() {
-        System.out.println("\n=== MENU PRINCIPAL ===");
-        System.out.println("1. Enregistrer un nouvel abonné");
-        System.out.println("2. Enregistrer un nouveau livre");
-        System.out.println("3. Enregistrer un nouvel exemplaire d'une reference");
-        System.out.println("4. Enregistrer un nouveau prêt");
-        System.out.println("5. Afficher la liste des abonnés");
-        System.out.println("6. Afficher la liste des livres");
-        System.out.println("7. Afficher la liste des prêts");
-        System.out.println("8. Gérer un retour");
-        System.out.println("0. Quitter");
-        System.out.print("Votre choix : ");
+        int choixPrincipal;
+        int choixSousMenu;
+
+        do {
+            System.out.println("\n=== MENU PRINCIPAL ===");
+            System.out.println("1. Gestion des livres");
+            System.out.println("2. Gestion des abonnes");
+            System.out.println("3. Gestion des prets");
+            System.out.println("4. Quitter");
+            System.out.println("Choisissez une option: ");
+            choixPrincipal = lireChoixUtilisateur();
+            sc.nextLine();
+
+            switch (choixPrincipal) {
+                case 1:
+                    do {
+                        System.out.println("\n== GESTION DES LIVRES ===");
+                        System.out.println("1. Enregistrer une nouvelle reference");
+                        System.out.println("2. Ajouter de nouveaux exemplaires a une reference");
+                        System.out.println("3. Supprimer une reference");
+                        System.out.println("4. Supprimer un ou des exemplaires d'une reference");
+                        System.out.println("5. Afficher la liste des references");
+                        System.out.println("6. Retour au menu principal");
+                        System.out.println("Choisissez une option: ");
+                        choixSousMenu = lireChoixUtilisateur();
+                        sc.nextLine();
+
+                        switch (choixSousMenu) {
+                            case 1:
+                                enregistrerNouveauLivre();
+                                break;
+                            case 2:
+                                bibliothecaire.ajouterExemplaireLivreInteractif(bibliotheque);
+                                break;
+                            case 3:
+                                supprimerReferences(this.sc);
+                                break;
+                            case 4:
+                                bibliothecaire.supprimerExemplaireLivreInteractif(bibliotheque);
+                                break;
+                            case 5:
+                                afficherListeLivres();
+                                break;
+                            case 6:
+                                break;
+                            default:
+                                System.out.println("Cette option n'existe pas");
+                        }
+                    } while (choixSousMenu != 6);
+                    break;
+
+                case 2:
+                    do {
+                        System.out.println("\n== GESTION DES ABONNES ===");
+                        System.out.println("1. Enregistrer un nouvel abonne");
+                        System.out.println("2. Supprimer un abonne");
+                        System.out.println("3. Afficher liste des abonnes");
+                        System.out.println("4. Retour au menu principal");
+                        choixSousMenu = lireChoixUtilisateur();
+                        sc.nextLine();
+
+                        switch (choixSousMenu) {
+                            case 1:
+                                enregistrerNouvelAbonne();
+                                break;
+                            case 2:
+                                supprimerAbonne(this.sc);
+                                break;
+                            case 3:
+                                afficherListeAbonnes();
+                                break;
+                            case 4:
+                                break;
+                            default:
+                                System.out.println("Cette option n'existe pas");
+                        }
+                    } while (choixSousMenu != 4);
+                    break;
+
+                case 3:
+                    do {
+                        System.out.println("\n== GESTION DES PRETS ===");
+                        System.out.println("1. Enregistrer un nouveau pret");
+                        System.out.println("2. Gerer un retour");
+                        System.out.println("3. Afficher liste des prets");
+                        System.out.println("4. Retour au menu principal");
+                        System.out.println("Choisissez une option: ");
+                        choixSousMenu = lireChoixUtilisateur();
+                        sc.nextLine();
+
+                        switch (choixSousMenu) {
+                            case 1:
+                                enregistrerNouveauPret();
+                                break;
+                            case 2:
+                                gererRetour();
+                                break;
+                            case 3:
+                                afficherListePrets();
+                                break;
+                            case 4:
+                                break;
+                            default:
+                                System.out.println("Cette option n'existe pas");
+                        }
+                    } while  (choixSousMenu != 4);
+                    break;
+
+                case 4:
+                    System.out.println("Au revoir !");
+                    break;
+
+                default:
+                    System.out.println("Cette option n'existe pas");
+            }
+        } while (choixPrincipal != 3);
     }
+
 
     protected int lireChoixUtilisateur() {
         try {
-            return sc.nextInt();
+            int choix = sc.nextInt();
+            SecurisationEntrees.validerEntierpositif(choix, "Choix");
+            return choix;
         } catch (Exception e) {
-            sc.nextLine();
             System.out.println("Choix invalide, veuillez entrer un nombre");
             return -1;
         }
     }
 
-    protected boolean traiterChoix(int choix) {
-        sc.nextLine();
-
-        switch (choix) {
-            case 1: enregistrerNouvelAbonne(); break;
-            case 2: enregistrerNouveauLivre(); break;
-            case 3: bibliothecaire.ajouterExemplaireLivreInteractif(bibliotheque); break;
-            case 4: enregistrerNouveauPret(); break;
-            case 5: afficherListeAbonnes(); break;
-            case 6: afficherListeLivres(); break;
-            case 7: afficherListePrets(); break;
-            case 8: gererRetour(); break;
-            case 0: return false;
-            default:
-                System.out.println(" Choix invalide !");
-                break;
-        }
-        return true;
-    }
 
     private void enregistrerNouvelAbonne() {
         System.out.println("\n=== NOUVEL ABONNE ===");
@@ -142,7 +229,7 @@ public class InterfaceBibliotheque {
         try {
             Abonne abonne = Abonne.creerAbonne(nom, prenom, email, id);
             bibliotheque.ajouterAbonne(abonne);
-            System.out.println("Nouvel abonné enregistré avec succès !");
+            System.out.println("Nouvel abonné enregistré avec succès ! - ID: " + id);
         } catch (IllegalArgumentException e) {
             System.out.println("Erreur : " + e.getMessage());
         }
@@ -182,6 +269,7 @@ public class InterfaceBibliotheque {
         while (true) {
             System.out.print("Quantité : ");
             quantite = sc.nextInt();
+            sc.nextLine();
                 try {
                     SecurisationEntrees.validerEntierpositif(quantite, "quantite");
                     break;
@@ -322,5 +410,13 @@ public class InterfaceBibliotheque {
         } catch (Exception e) {
             System.out.println("Erreur : " + e.getMessage());
         }
+    }
+
+    private void supprimerAbonne(Scanner scanner) {
+        bibliotheque.supprimerAbonneBibli(scanner);
+    }
+
+    private void supprimerReferences(Scanner scanner) {
+        bibliotheque.supprimerReferenceBibli(scanner);
     }
 }

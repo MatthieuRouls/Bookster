@@ -93,6 +93,18 @@ public class Livre {
         System.out.println("Nouvelle quantite totale : " + this.quantite);
         System.out.println("Nouvelle quantite disponible : " + this.quantiteDisponible);
     }
+
+    public void supprimerExemplaire(int nombreExemplaire) {
+        if (nombreExemplaire <= 0 || nombreExemplaire > this.quantite) {
+            throw new IllegalArgumentException("Le nombre d'exemplaire doit etre positif et existant");
+        }
+        this.quantiteDisponible -= nombreExemplaire;
+        this.quantite -= nombreExemplaire;
+
+        System.out.println("Exemplaire(s) supprimes avec succes !");
+        System.out.println("Nouvelle quantite totale : " + this.quantite);
+        System.out.println("Nouvelle quantite disponible : " + this.quantiteDisponible);
+    }
 }
 
 

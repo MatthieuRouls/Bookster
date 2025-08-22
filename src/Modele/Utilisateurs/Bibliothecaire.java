@@ -68,4 +68,24 @@ public class Bibliothecaire {
             System.out.println("Aucun livre trouve avec cet identifiant.");
         }
     }
+
+    public void supprimerExemplaireLivreInteractif(Bibliotheque bibliotheque) {
+        System.out.println("ID du livre");
+        String id = sc.nextLine();
+
+        Livre livres = bibliotheque.rechercherLivreParID(id);
+
+        if (livres != null) {
+            System.out.println("Nombre d'exemplaires a supprimer : ");
+            int nombreExemplaires = sc.nextInt();
+            sc.nextLine();
+
+            try {
+                livres.supprimerExemplaire(nombreExemplaires);
+                System.out.println("Exemplaire(s) supprimer avec succes par " + getNom() );
+            } catch (IllegalArgumentException e) {
+                System.out.println("Erreur : " + e.getMessage());
+            }
+        }
+    }
 }
