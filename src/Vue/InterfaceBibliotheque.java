@@ -5,6 +5,7 @@ import Modele.Actions.Emprunt;
 import Modele.Articles.Livre;
 import Modele.GenerateurIdentifiant.Generateurs.IDGenerateur;
 import Modele.GenerateurIdentifiant.Generateurs.ISBNGenerator;
+import Modele.Securite.GestionConnexion;
 import Modele.Securite.SecurisationEntrees;
 import Modele.Utilisateurs.Abonne;
 import Modele.Utilisateurs.Bibliothecaire;
@@ -19,10 +20,12 @@ public class InterfaceBibliotheque {
     private Scanner sc;
     protected Bibliotheque bibliotheque;
     private Bibliothecaire bibliothecaire;
+    private GestionConnexion gestionConnexion;
 
     public InterfaceBibliotheque(Bibliotheque bibliotheque) {
         this.sc = new Scanner(System.in);
         this.bibliotheque = bibliotheque;
+        this.gestionConnexion = new GestionConnexion();
 
         List<Bibliothecaire> bibliothecaires = bibliotheque.getBibliothecaires();
         if (bibliothecaires != null && !bibliothecaires.isEmpty()) {
@@ -35,13 +38,23 @@ public class InterfaceBibliotheque {
 
     public void demarrerApplication() {
         try {
-            System.out.println("BOOKSTER");
+            System.out.println("BOOKSTER - Connexion");
 
-            boolean continuer = true;
-            while (continuer) {
-                afficherMenuPrincipal();
-                continuer = false;
+            Bibliotheque bibliothequeTest = new Bibliotheque("Biblioyheque des Couilles", "123 rue des livres");
+            gestionConnexion.ajouterBibliotheque("1234", "Roucoulette.57", bibliothequeTest);
+
+            Bibliothecaire bibliothecaireTest = new Bibliothecaire("Jeanne Boule", "1234", "Roucoulette.57");
+            gestionConnexion.ajouterBibliothecaire("1234", bibliothecaireTest);
+            boolean connecte = false;
+            while (!connecte) {
+                connecte = gestionConnexion.connexionBibliotheque(sc);
             }
+                connecte = false;
+                while (!connecte) {
+                    connecte = gestionConnexion.connexionBibliothecaire(sc);
+                }
+
+                afficherMenuPrincipal();
         } finally {
             sc.close();
         }
@@ -168,7 +181,7 @@ public class InterfaceBibliotheque {
     }
 
 
-    protected int lireChoixUtilisateur() {
+    private int lireChoixUtilisateur() {
         try {
             int choix = sc.nextInt();
             SecurisationEntrees.validerEntierpositif(choix, "Choix");

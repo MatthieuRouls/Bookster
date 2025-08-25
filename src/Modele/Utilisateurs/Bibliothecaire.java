@@ -9,17 +9,23 @@ import java.util.Scanner;
 public class Bibliothecaire {
     Scanner sc = new Scanner(System.in);
     private String nom;
-    private String identifiant;
+    private static String identifiant;
+    private static String motDePasse;
 
-    public Bibliothecaire(String nom, String identifiant) {
+    public Bibliothecaire(String nom, String identifiant, String motDePasse) {
         this.nom = nom;
         this.identifiant = identifiant;
+        this.motDePasse = motDePasse;
     }
     public String getNom() {
         return nom;
     }
     public String getIdentifiant() {
         return identifiant;
+    }
+
+    public String getMotDePasse() {
+        return motDePasse;
     }
 
     public Emprunt creerEmprunt(Livre livre, Abonne abonne, Bibliotheque bibliotheque) {
