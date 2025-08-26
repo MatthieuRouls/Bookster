@@ -9,8 +9,8 @@ import java.util.Scanner;
 public class Bibliothecaire {
     Scanner sc = new Scanner(System.in);
     private String nom;
-    private static String identifiant;
-    private static String motDePasse;
+    private String identifiant;
+    private String motDePasse;
 
     public Bibliothecaire(String nom, String identifiant, String motDePasse) {
         this.nom = nom;

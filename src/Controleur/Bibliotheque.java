@@ -1,5 +1,6 @@
 package Controleur;
 
+import Modele.Securite.GestionConnexion;
 import Modele.Utilisateurs.Abonne;
 import Modele.Utilisateurs.Bibliothecaire;
 import Modele.Actions.Emprunt;
@@ -27,6 +28,14 @@ public class Bibliotheque {
         this.abonnes = new ArrayList<>();
     }
 
+    public String getNom() {
+        return nom;
+    }
+
+    public String getAdresse() {
+        return adresse;
+    }
+
     public List<Livre> getLivres() {
         return livres;
     }
@@ -40,6 +49,9 @@ public class Bibliotheque {
     }
 
     public List<Bibliothecaire> getBibliothecaires() {
+        if (bibliothecaires == null) {
+            bibliothecaires = new ArrayList<>();
+        }
         return bibliothecaires;
     }
 
@@ -116,7 +128,7 @@ public class Bibliotheque {
         }
     }
     public void ajouterBibliothecaire(Bibliothecaire bibliothecaire) {
-        if (this.bibliothecaires != null) {
+        if (this.bibliothecaires == null) {
             this.bibliothecaires = new ArrayList<>();
         }
         this.bibliothecaires.add(bibliothecaire);

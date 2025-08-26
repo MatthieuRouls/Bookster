@@ -9,6 +9,7 @@ import Modele.Securite.GestionConnexion;
 import Modele.Securite.SecurisationEntrees;
 import Modele.Utilisateurs.Abonne;
 import Modele.Utilisateurs.Bibliothecaire;
+import Modele.Utilisateurs.CompteBibliotheque;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -21,40 +22,63 @@ public class InterfaceBibliotheque {
     protected Bibliotheque bibliotheque;
     private Bibliothecaire bibliothecaire;
     private GestionConnexion gestionConnexion;
+    private Bibliotheque bibliothequeConnectee;
+    private Bibliothecaire bibliothecaireConnectee;
 
-    public InterfaceBibliotheque(Bibliotheque bibliotheque) {
+    public InterfaceBibliotheque() {
         this.sc = new Scanner(System.in);
-        this.bibliotheque = bibliotheque;
         this.gestionConnexion = new GestionConnexion();
-
-        List<Bibliothecaire> bibliothecaires = bibliotheque.getBibliothecaires();
-        if (bibliothecaires != null && !bibliothecaires.isEmpty()) {
-            this.bibliothecaire = bibliothecaires.get(0);
-        } else {
-            System.out.println("Erreur: Aucun bibliothecaire disponible dans cette bibliotheque !");
-        }
-
     }
 
     public void demarrerApplication() {
         try {
-            System.out.println("BOOKSTER - Connexion");
+            System.out.println("BOOKSTER - Bienvenue !");
+            
+            System.out.print("Voulez-vous créer une bibliothèque ? (Oui/Non) : ");
+            String choixCreation = sc.nextLine();
 
-            Bibliotheque bibliothequeTest = new Bibliotheque("Biblioyheque des Couilles", "123 rue des livres");
-            gestionConnexion.ajouterBibliotheque("1234", "Roucoulette.57", bibliothequeTest);
+            if (choixCreation.equalsIgnoreCase("Oui")) {
+                creerBibliothequeEtBibliothecaires();
+            } else {
 
-            Bibliothecaire bibliothecaireTest = new Bibliothecaire("Jeanne Boule", "1234", "Roucoulette.57");
-            gestionConnexion.ajouterBibliothecaire("1234", bibliothecaireTest);
+                System.out.println("Utilisation des données de test pour la connexion...");
+                Bibliotheque bibliothequeTest = new Bibliotheque("Bibliothèque des Coquilles", "123 rue des livres");
+                gestionConnexion.ajouterBibliotheque("1234", "Roucoulette.57", bibliothequeTest);
+
+                Bibliothecaire bibliothecaireTest = new Bibliothecaire("Jeanne Boule", "1234", "Roucoulette.57");
+                bibliothequeTest.ajouterBibliothecaire(bibliothecaireTest);
+                this.bibliotheque = bibliothequeTest;
+            }
+
+            System.out.println("=== ÉTAPE 1/2 : Connexion à la bibliothèque ===");
             boolean connecte = false;
             while (!connecte) {
                 connecte = gestionConnexion.connexionBibliotheque(sc);
-            }
-                connecte = false;
-                while (!connecte) {
-                    connecte = gestionConnexion.connexionBibliothecaire(sc);
+                if (!connecte) {
+                    System.out.println("Tentative échouée. Réessayez ou tapez 'exit' pour quitter.");
+                    String choix = sc.nextLine();
+                    if (choix.equalsIgnoreCase("exit")) {
+                        return;
+                    }
                 }
+            }
+            this.bibliothequeConnectee = gestionConnexion.getBibliothequeConnectee();
 
-                afficherMenuPrincipal();
+            System.out.println("=== ÉTAPE 2/2 : Identification du bibliothécaire ===");
+            connecte = false;
+            while (!connecte) {
+                connecte = gestionConnexion.connexionBibliothecaire(sc);
+                if (!connecte) {
+                    System.out.println("Tentative échouée. Réessayez ou tapez 'exit' pour quitter.");
+                    String choix = sc.nextLine();
+                    if (choix.equalsIgnoreCase("exit")) {
+                        return;
+                    }
+                }
+            }
+            this.bibliothecaireConnectee = gestionConnexion.getBibliothecaireConnecte();
+
+            afficherMenuPrincipal();
         } finally {
             sc.close();
         }
@@ -67,6 +91,10 @@ public class InterfaceBibliotheque {
 
         do {
             System.out.println("\n=== MENU PRINCIPAL ===");
+            if (bibliothecaireConnectee != null && bibliothequeConnectee != null) {
+                System.out.println("Connecté en tant que : " + bibliothecaireConnectee.getNom());
+                System.out.println("Bibliothèque : " + bibliothequeConnectee.getNom());
+            }
             System.out.println("1. Gestion des livres");
             System.out.println("2. Gestion des abonnes");
             System.out.println("3. Gestion des prets");
@@ -177,7 +205,7 @@ public class InterfaceBibliotheque {
                 default:
                     System.out.println("Cette option n'existe pas");
             }
-        } while (choixPrincipal != 3);
+        } while (choixPrincipal != 4);
     }
 
 
@@ -245,6 +273,41 @@ public class InterfaceBibliotheque {
             System.out.println("Nouvel abonné enregistré avec succès ! - ID: " + id);
         } catch (IllegalArgumentException e) {
             System.out.println("Erreur : " + e.getMessage());
+        }
+    }
+
+    private void creerBibliothequeEtBibliothecaires() {
+        System.out.println("=== CREATION D'UNE BIBLIOTHEQUE ===");
+
+        System.out.print("Nom de la bibliotheque : ");
+        String nomBibliotheque = sc.nextLine();
+        System.out.print("Adresse de la bibliotheque : ");
+        String adresseBibliotheque = sc.nextLine();
+
+        this.bibliotheque = new Bibliotheque(nomBibliotheque, adresseBibliotheque);
+
+        System.out.println("ID de a bibliotheque : ");
+        String idBibliotheque = sc.nextLine();
+        System.out.print("Mot de Passe : ");
+        String motDePasseBibliotheque = sc.nextLine();
+        gestionConnexion.ajouterBibliotheque(idBibliotheque, motDePasseBibliotheque, this.bibliotheque);
+
+        boolean ajouterBibliothecaire = true;
+        while (ajouterBibliothecaire) {
+            System.out.println("\n=== AJOUT D'UN BIBLIOTHÉCAIRE ===");
+            System.out.print("Nom du bibliothécaire : ");
+            String nomBibliothecaire = sc.nextLine();
+            System.out.print("ID du bibliothécaire : ");
+            String idBibliothecaire = sc.nextLine();
+            System.out.print("Mot de passe du bibliothécaire : ");
+            String motDePasseBibliothecaire = sc.nextLine();
+
+            Bibliothecaire bibliothecaire = new Bibliothecaire(nomBibliothecaire, idBibliothecaire, motDePasseBibliothecaire);
+            this.bibliotheque.ajouterBibliothecaire(bibliothecaire);
+
+            System.out.print("Voulez-vous ajouter un autre bibliothécaire ? (Oui/Non) : ");
+            String choix = sc.nextLine();
+            ajouterBibliothecaire = choix.equalsIgnoreCase("Oui");
         }
     }
 

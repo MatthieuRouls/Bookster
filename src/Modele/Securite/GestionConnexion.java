@@ -9,22 +9,37 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class GestionConnexion {
-    private Map<String, CompteBibliotheque> bibliothèques;
-    private Map<String, Bibliothecaire> bibliothecaires;
+    private Map<String, CompteBibliotheque> bibliotheques;
     private Bibliothecaire bibliothecaireConnecte;
-    private CompteBibliotheque bibliothèqueConnectée;
+    private CompteBibliotheque bibliothequeConnectee;
 
     public GestionConnexion() {
-        this.bibliothèques = new HashMap<>();
-        this.bibliothecaires = new HashMap<>();
+        this.bibliotheques = new HashMap<>();
     }
 
     public void ajouterBibliotheque(String idBibliotheque, String motDePasse, Bibliotheque bibliotheque) {
-        bibliothèques.put(idBibliotheque, new CompteBibliotheque(idBibliotheque, motDePasse, bibliotheque));
+        bibliotheques.put(idBibliotheque, new CompteBibliotheque(idBibliotheque, motDePasse, bibliotheque));
     }
 
-    public void ajouterBibliothecaire(String idBibliothecaire, Bibliothecaire bibliothecaire) {
-        bibliothecaires.put(idBibliothecaire, bibliothecaire);
+    public void ajouterBibliothecaire(String nom, String identifiant, String motDePasse) {
+        if (bibliothequeConnectee != null && bibliothequeConnectee.getBibliotheque() != null) {
+            Bibliothecaire nouvelleBibliothecaire = new Bibliothecaire(nom, identifiant, motDePasse);
+            bibliothequeConnectee.getBibliotheque().ajouterBibliothecaire(nouvelleBibliothecaire);
+            System.out.println("BIbliothecaire ajoute avec succes !");
+        } else {
+            System.out.println("Aucune bibliotheque connectee !");
+        }
+    }
+
+    public void afficherBibliothecaires() {
+        if (bibliothequeConnectee != null && bibliothequeConnectee.getBibliotheque() != null) {
+            System.out.println("=== Bibliothecaire de " + bibliothequeConnectee.getBibliotheque().getNom() + "===");
+            for (Bibliothecaire bib : bibliothequeConnectee.getBibliotheque().getBibliothecaires()) {
+                System.out.println("- " + bib.getNom() + "(ID: " + bib.getIdentifiant() + ")");
+            }
+        } else {
+            System.out.println("Aucune bibliotheque connectee !");
+        }
     }
 
     public boolean connexionBibliotheque(Scanner sc) {
@@ -33,9 +48,9 @@ public class GestionConnexion {
         System.out.println("Mot de passe de la bibliothèque : ");
         String motDePasse = sc.nextLine();
 
-        CompteBibliotheque compte = bibliothèques.get(idBibliotheque);
+        CompteBibliotheque compte = bibliotheques.get(idBibliotheque);
         if (compte != null && compte.getMotDePasse().equals(motDePasse)) {
-            bibliothèqueConnectée = compte;
+            bibliothequeConnectee = compte;
             System.out.println("Connexion à la bibliothèque réussie !");
             return true;
         } else {
@@ -45,7 +60,7 @@ public class GestionConnexion {
     }
 
     public boolean connexionBibliothecaire(Scanner sc) {
-        if (bibliothèqueConnectée == null) {
+        if (bibliothequeConnectee == null) {
             System.out.println("Veuillez d'abord vous connecter à une bibliothèque.");
             return false;
         }
@@ -55,7 +70,14 @@ public class GestionConnexion {
         System.out.println("Mot de passe du bibliothécaire : ");
         String motDePasse = sc.nextLine();
 
-        Bibliothecaire bibliothecaire = bibliothecaires.get(idBibliothecaire);
+        Bibliothecaire bibliothecaire = null;
+        for (Bibliothecaire bib : bibliothequeConnectee.getBibliotheque().getBibliothecaires()) {
+            if (bib.getIdentifiant().equals(idBibliothecaire)) {
+                bibliothecaire = bib;
+                break;
+            }
+        }
+
         if (bibliothecaire != null && bibliothecaire.getMotDePasse().equals(motDePasse)) {
             bibliothecaireConnecte = bibliothecaire;
             System.out.println("Connexion réussie ! Bienvenue, " + bibliothecaire.getNom());
@@ -70,7 +92,7 @@ public class GestionConnexion {
         return bibliothecaireConnecte;
     }
 
-    public CompteBibliotheque getBibliothèqueConnectée() {
-        return bibliothèqueConnectée;
+    public Bibliotheque getBibliothequeConnectee() {
+        return bibliothequeConnectee.getBibliotheque();
     }
 }

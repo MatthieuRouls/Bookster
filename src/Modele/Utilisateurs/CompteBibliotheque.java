@@ -10,6 +10,7 @@ public class CompteBibliotheque {
     public CompteBibliotheque(String idBibliotheque, String motDePasse) {
         this.idBibliotheque = idBibliotheque;
         this.motDePasse = motDePasse;
+        this.bibliotheque = bibliotheque;
     }
 
     public CompteBibliotheque(String idBibliotheque, String motDePasse, Bibliotheque bibliotheque) {
@@ -19,7 +20,7 @@ public class CompteBibliotheque {
     }
 
     public Bibliotheque getBibliotheque() {
-        return bibliotheque;
+        return this.bibliotheque;
     }
 
     public String getIdBibliotheque() {
