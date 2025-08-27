@@ -1,0 +1,40 @@
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TableView?>
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Vue.JavaFX.MainController">
+    <!-- Navigation sidebar (déjà présente) -->
+    <left>
+        <!-- Code existant -->
+    </left>
+
+    <center>
+        <StackPane>
+            <!-- Dashboard Pane -->
+            <AnchorPane fx:id="dashboardPane">
+                <!-- Contenu du dashboard avec les statistiques -->
+            </AnchorPane>
+
+            <!-- Books Pane -->
+            <AnchorPane fx:id="booksPane" visible="false">
+                <TableView fx:id="booksTable">
+                    <!-- Colonnes pour les livres -->
+                </TableView>
+            </AnchorPane>
+
+            <!-- Members Pane -->
+            <AnchorPane fx:id="membersPane" visible="false">
+                <TableView fx:id="membersTable">
+                    <!-- Colonnes pour les membres -->
+                </TableView>
+            </AnchorPane>
+
+            <!-- Checkouts Pane -->
+            <AnchorPane fx:id="checkoutsPane" visible="false">
+                <TableView fx:id="checkoutsTable">
+                    <!-- Colonnes pour les emprunts -->
+                </TableView>
+            </AnchorPane>
+        </StackPane>
+    </center>
+</BorderPane>
